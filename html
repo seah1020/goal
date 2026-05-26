@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        /* 기존 위젯과 동일한 스타일 유지 */
+        .widget-container {
+            border: 2px solid #A3B18A; /* 연한 올리브 그린 테두리 */
+            border-radius: 12px;
+            padding: 20px 30px;
+            width: 320px;
+            min-height: 120px; /* 카운터와 높이 맞춤 */
+            text-align: center;
+            background-color: transparent;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        /* 제목 스타일 (초록색) */
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2D6A4F;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        /* 목표 텍스트 (수정 가능 영역) */
+        .goal-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2D6A4F;
+            border: 1px dashed transparent;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            word-break: keep-all; /* 단어 단위로 줄바꿈 */
+        }
+        /* 마우스를 올렸을 때 수정 가능하다는 느낌 주기 */
+        .goal-text:hover {
+            background-color: rgba(163, 177, 138, 0.1);
+            border-color: #A3B18A;
+        }
+        /* 클릭해서 수정 중일 때 */
+        .goal-text:focus {
+            outline: none;
+            background-color: white;
+            border: 1px solid #2D6A4F;
+            box-shadow: 0 0 5px rgba(45, 106, 79, 0.2);
+        }
+        /* 안내 문구 */
+        .hint {
+            font-size: 10px;
+            color: #A3B18A;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="widget-container">
+        <div class="title">🎯 영상 목표</div>
+        
+        <div id="goal-display" class="goal-text" contenteditable="true" oninput="saveGoal()">
+            구독자 1만명 달성!
+        </div>
+        
+        <div class="hint">클릭해서 수정하면 자동 저장됩니다</div>
+    </div>
+
+    <script>
+        const goalDisplay = document.getElementById('goal-display');
+
+        // 1. 페이지 로드 시 저장된 목표 불러오기
+        window.onload = function() {
+            const savedGoal = localStorage.getItem('notion_video_goal');
+            if (savedGoal) {
+                goalDisplay.innerText = savedGoal;
+            }
+        };
+
+        // 2. 글자가 바뀔 때마다 localStorage에 저장하기
+        function saveGoal() {
+            const currentGoal = goalDisplay.innerText;
+            localStorage.setItem('notion_video_goal', currentGoal);
+        }
+
+        // 엔터 키를 누르면 줄바꿈 대신 수정 완료(포커스 해제)를 원할 경우 (선택 사항)
+        goalDisplay.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                goalDisplay.blur();
+            }
+        });
+    </script>
+
+</body>
+</html>
